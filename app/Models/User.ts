@@ -1,4 +1,5 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm';
+import Account from 'App/Models/Account';
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -9,4 +10,12 @@ export default class User extends BaseModel {
 
   @column()
   public email: string;
+
+  @column()
+  public account_id: number;
+
+  @belongsTo(() => Account, {
+    foreignKey: 'account_id',
+  })
+  public account: BelongsTo<typeof Account>;
 }

@@ -3,12 +3,22 @@ import pluralize from 'pluralize';
 
 export default function makeCRUDController(model: String) {
   return class MakeCRUDController {
-    public async index(_: any, _args: any, { response }: HttpContextContract) {
+    public async index(
+      _: any,
+      _args: any,
+      { response }: HttpContextContract,
+      fields: any,
+    ) {
       try {
+        const setRelationships = (await import('App/Utils/setRelationship'))
+          .default;
         const Model = (await import(`App/Models/${model}`)).default;
-        const entities = await Model.all();
+        const initialQuery = Model.query();
+
+        const query = setRelationships(initialQuery, fields, [], {}, 'records');
+        const entities = await query.paginate();
         return {
-          records: entities,
+          records: entities.toJSON().data,
         };
       } catch (err) {
         console.log(err);

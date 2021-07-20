@@ -8,6 +8,7 @@ export default async function getSchema() {
         id: ID
         name: String
         email: String
+        account: Account
       }
   
       input UserCreateInput {
